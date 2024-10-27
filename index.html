@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>YouTube Video Summarizer</title>
+</head>
+<body class="bg-gradient-to-r from-[#1D2671] to-[#C33764] text-[#FAEF5D] flex flex-col items-center justify-center min-h-screen p-4">
+    
+    <h1 class="bg-[#72147e] text-4xl text-center text-white font-bold py-4 px-8 rounded-xl shadow-xl mb-10 animate-pulse">
+        YouTube Video Summarizer
+    </h1>
+    
+    <form class="flex flex-col w-full max-w-md bg-[#3C0753] p-8 rounded-2xl shadow-2xl space-y-6" id="urlForm">
+        <input type="text" name="url" placeholder="Enter YouTube video URL" required 
+               class="p-4 rounded-lg border border-[#9C27B0] bg-[#1B1B2F] text-[#FAEF5D] focus:outline-none focus:ring-4 focus:ring-[#9C27B0] transition duration-300 shadow-lg placeholder-gray-400">
+        
+        <button type="submit" class="bg-[#9C27B0] text-white font-semibold py-3 rounded-lg hover:bg-[#D500F9] transition duration-300 shadow-lg transform hover:scale-105">
+            Summarize
+        </button>
+    </form>
+
+    <div class="mt-10 w-full max-w-md p-4 bg-[#3C0753] rounded-2xl shadow-2xl">
+        <h2 class="text-2xl font-semibold text-[#FAEF5D] text-center">Summary:</h2>
+        <p id="summary" class="mt-4 text-lg text-white text-center leading-relaxed"></p>
+    </div>
+
+    <script>
+        document.getElementById('urlForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            document.getElementById('summary').textContent = "Summarizing... Please wait.";
+            try {
+                const response = await fetch('/', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    document.getElementById('summary').textContent = `Error: ${errorText}`;
+                    return;
+                }
+
+                const summary = await response.text();
+                document.getElementById('summary').textContent = summary;
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('summary').textContent = 'An error occurred. Please try again.';
+            }
+        };
+    </script>
+</body>
+</html>
