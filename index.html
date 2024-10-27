@@ -5,23 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <title>YouTube Video Summarizer</title>
+    <style>
+        .bg-gradient-custom {
+            background-image: linear-gradient(-225deg, #FF3CAC 0%, #562B7C 52%, #2B86C5 100%);
+        }
+        /* Animation for the form submission */
+        .submit-animation {
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+    </style>
 </head>
-<body class="bg-gradient-to-r from-[#1D2671] to-[#C33764] text-[#FAEF5D] flex flex-col items-center justify-center min-h-screen p-4">
+<body class="bg-gradient-custom text-[#FAEF5D] w-full flex flex-col items-center justify-center min-h-screen p-4">
     
-    <h1 class="bg-[#72147e] text-4xl text-center text-white font-bold py-4 px-8 rounded-xl shadow-xl mb-10 animate-pulse">
-        YouTube Video Summarizer
+    <h1 class="text-4xl text-center text-white font-bold mb-4">
+        Free AI YouTube Video Summarizer
     </h1>
+    <p class="text-center text-white text-lg max-w-2xl mb-10">
+        Get straight to the key points of any YouTube video without spending hours watching with the AI-Powered YouTube Video Summarizer. This tool uses advanced AI technology to generate accurate, concise summaries that capture the most important information from long videos. Whether you're researching, learning, or simply trying to digest content more quickly, this tool can save you significant time and effort.
+    </p>
     
-    <form class="flex flex-col w-full max-w-md bg-[#3C0753] p-8 rounded-2xl shadow-2xl space-y-6" id="urlForm">
-        <input type="text" name="url" placeholder="Enter YouTube video URL" required 
-               class="p-4 rounded-lg border border-[#9C27B0] bg-[#1B1B2F] text-[#FAEF5D] focus:outline-none focus:ring-4 focus:ring-[#9C27B0] transition duration-300 shadow-lg placeholder-gray-400">
+    <form class="flex w-2/3 bg-[#3C0753] p-6 rounded-lg shadow-lg space-x-4" id="urlForm">
+        <input type="text" name="url" placeholder="YouTube Video URL or ID" required 
+               class="flex-grow p-3 rounded-xl border border-[#9C27B0] bg-[#1B1B2F] text-[#FAEF5D] focus:outline-none focus:ring-4 focus:ring-[#9C27B0] transition duration-300 shadow placeholder-gray-400">
         
-        <button type="submit" class="bg-[#9C27B0] text-white font-semibold py-3 rounded-lg hover:bg-[#D500F9] transition duration-300 shadow-lg transform hover:scale-105">
-            Summarize
+        <button type="submit" class="bg-[#9C27B0] text-white font-semibold px-6 py-3 rounded-lg hover:bg-[#D500F9] transition duration-300 shadow-lg transform hover:scale-105 submit-animation">
+            Summarize Video
         </button>
     </form>
 
-    <div class="mt-10 w-full max-w-md p-4 bg-[#3C0753] rounded-2xl shadow-2xl">
+    <div class="mt-10 w-auto max-w-4xl p-4 bg-[#3C0753] rounded-lg shadow-lg">
         <h2 class="text-2xl font-semibold text-[#FAEF5D] text-center">Summary:</h2>
         <p id="summary" class="mt-4 text-lg text-white text-center leading-relaxed"></p>
     </div>
@@ -30,7 +50,9 @@
         document.getElementById('urlForm').onsubmit = async function(e) {
             e.preventDefault();
             const formData = new FormData(this);
-            document.getElementById('summary').textContent = "Summarizing... Please wait.";
+            const summaryElement = document.getElementById('summary');
+            summaryElement.textContent = "Summarizing... Please wait.";
+
             try {
                 const response = await fetch('/', {
                     method: 'POST',
@@ -39,15 +61,15 @@
 
                 if (!response.ok) {
                     const errorText = await response.text();
-                    document.getElementById('summary').textContent = `Error: ${errorText}`;
+                    summaryElement.textContent = `Error: ${errorText}`;
                     return;
                 }
 
                 const summary = await response.text();
-                document.getElementById('summary').textContent = summary;
+                summaryElement.textContent = summary;
             } catch (error) {
                 console.error('Error:', error);
-                document.getElementById('summary').textContent = 'An error occurred. Please try again.';
+                summaryElement.textContent = 'An error occurred. Please try again.';
             }
         };
     </script>
